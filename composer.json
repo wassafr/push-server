@@ -9,7 +9,6 @@
 		"duccio/apns-php": "dev-master",
 	  	"wassafr/gcm-php": "^1.0"
 	},
-    ],
 	"autoload": {
         "psr-4": { "Wassa\\MPS\\": "Wassa/MPS/" }
     }
