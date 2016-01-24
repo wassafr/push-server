@@ -1,0 +1,16 @@
+{
+	"name": "wassafr/push-server",
+	"type": "library",
+	"license": "proprietary",
+	"description": "Wassa Push Server",
+	"keywords": ["APNS", "apple", "push", "iOS", "Android", "GCM", "C2DM", "notification"],
+	"homepage": "http://www.wassa.fr",
+	"require": {
+		"duccio/apns-php": "dev-master",
+	  	"wassafr/gcm-php": "^1.0"
+	},
+    ],
+	"autoload": {
+        "psr-4": { "Wassa\\MPS\\": "Wassa/MPS/" }
+    }
+}
