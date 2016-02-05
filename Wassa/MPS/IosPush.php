@@ -21,8 +21,6 @@ class IosPush extends AbstractPush
     {
         parent::__construct($pushData, $registrationTokens, $parameters, $logger);
 
-        $this->logger->log('INFO: COUCOU');
-
         if (!isset($parameters['environment'])) {
             throw new PushException("No environment specified");
         }
