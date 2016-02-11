@@ -81,6 +81,13 @@ class IosPush extends AbstractPush
         // Connect to the Apple Push Notification Service
         $push->connect();
 
+        $badge = $this->pushData->getApnsBadge();
+        $category = $this->pushData->getApnsCategory();
+        $expiry = $this->pushData->getApnsExpiry();
+        $text = $this->pushData->getApnsText();
+        $sound = $this->pushData->getApnsSound();
+        $customProperties = json_decode($this->pushData->getApnsCustomProperties(), true);
+
         foreach ($this->registrationTokens as $token) {
             try {
                 $message = new \ApnsPHP_Message($token);
@@ -91,13 +98,6 @@ class IosPush extends AbstractPush
                 
                 continue;
             }
-
-            $badge = $this->pushData->getApnsBadge();
-            $category = $this->pushData->getApnsCategory();
-            $expiry = $this->pushData->getApnsExpiry();
-            $text = $this->pushData->getApnsText();
-            $sound = $this->pushData->getApnsSound();
-            $customProperties = $this->pushData->getApnsCustomProperties();
 
             if(isset($badge)) {
                 $message->setBadge($badge);
