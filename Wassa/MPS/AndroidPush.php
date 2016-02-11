@@ -32,7 +32,7 @@ class AndroidPush extends AbstractPush
             $response = $gcmPhp->sendMessage($this->parameters['api_key'],
                 $this->parameters['dry_run'],
                 $this->registrationTokens,
-                json_encode($this->pushData->getGcmPayloadData()),
+                $this->pushData->getGcmPayloadData(),
                 $this->pushData->getGcmCollapseKey());
 
             if (!$response) {
