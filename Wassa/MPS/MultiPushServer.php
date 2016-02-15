@@ -78,16 +78,17 @@ class MultiPushServer
     /**
      * @param PushData $pushData
      * @param array $registrationTokens
-     * @return array|bool
+     * @param array $badges
+     * @return array
      */
-    public function send(PushData $pushData, $registrationTokens)
+    public function send(PushData $pushData, $registrationTokens, $badges = null)
     {
         if (($this->_mode & self::SEND_APNS) == self::SEND_APNS) {
             $pushInfo['apns']['environment'] = $this->_config['apns']['environment'];
             $pushInfo['apns']['prod_cert'] = $this->_config['apns']['prod_cert'];
             $pushInfo['apns']['sand_cert'] = $this->_config['apns']['sand_cert'];
             $pushInfo['apns']['ca_cert'] = $this->_config['apns']['ca_cert'];
-            $iosPush = new IosPush($pushData, $registrationTokens, $pushInfo['apns'], $this->logger);
+            $iosPush = new IosPush($pushData, $registrationTokens, $badges, $pushInfo['apns'], $this->logger);
 
             return $iosPush->sendPush();
         }

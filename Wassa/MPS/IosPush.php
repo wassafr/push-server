@@ -14,12 +14,16 @@ class IosPush extends AbstractPush
      */
     private $certificate;
 
+    private $badges;
+
     /**
      * @inheritdoc
      */
-    public function __construct(PushData $pushData, $registrationTokens, $parameters, LoggerInterface $logger)
+    public function __construct(PushData $pushData, $registrationTokens, $badges, $parameters, LoggerInterface $logger)
     {
         parent::__construct($pushData, $registrationTokens, $parameters, $logger);
+
+        $this->badges = $badges;
 
         if (!isset($parameters['environment'])) {
             throw new PushException("No environment specified");
@@ -81,14 +85,16 @@ class IosPush extends AbstractPush
         // Connect to the Apple Push Notification Service
         $push->connect();
 
-        $badge = $this->pushData->getApnsBadge();
         $category = $this->pushData->getApnsCategory();
         $expiry = $this->pushData->getApnsExpiry();
         $text = $this->pushData->getApnsText();
         $sound = $this->pushData->getApnsSound();
         $customProperties = json_decode($this->pushData->getApnsCustomProperties(), true);
 
-        foreach ($this->registrationTokens as $token) {
+        for ($i = 0; $i < count($this->registrationTokens); $i++) {
+            $token = $this->registrationTokens[$i];
+            $badge = $this->pushData->getApnsBadge() ? $this->pushData->getApnsBadge() : $this->badges[$i];
+
             try {
                 $message = new \ApnsPHP_Message($token);
             }
