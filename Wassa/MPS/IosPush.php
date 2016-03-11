@@ -88,7 +88,7 @@ class IosPush extends AbstractPush
                 continue;
             }
 
-            $badge = (array_key_exists($index, $this->badges) && is_numeric($this->badges[$index])) ? $this->badges : 1;
+            $badge = $this->badges[$index];
             $category = $this->pushData->getApnsCategory();
             $expiry = $this->pushData->getApnsExpiry();
             $text = $this->pushData->getApnsText();
