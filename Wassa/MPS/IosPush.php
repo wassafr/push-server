@@ -13,7 +13,6 @@ class IosPush extends AbstractPush
      * @var string
      */
     private $certificate;
-
     private $badges;
 
     /**
@@ -22,13 +21,11 @@ class IosPush extends AbstractPush
     public function __construct(PushData $pushData, $registrationTokens, $badges, $parameters, LoggerInterface $logger)
     {
         parent::__construct($pushData, $registrationTokens, $parameters, $logger);
-
         $this->badges = $badges;
 
         if (!isset($parameters['environment'])) {
             throw new PushException("No environment specified");
-        }
-        else {
+        } else {
             $env = strtolower($parameters['environment']);
 
             if ($env == 'sandbox') {
@@ -36,22 +33,18 @@ class IosPush extends AbstractPush
 
                 if (isset($parameters['sand_cert']) && file_exists($parameters['sand_cert'])) {
                     $this->certificate = $parameters['sand_cert'];
-                }
-                else {
+                } else {
                     throw new PushException("No APNS sandbox certificate file specified or file doesn't exist");
                 }
-            }
-            elseif($env == 'production') {
+            } elseif ($env == 'production') {
                 $this->parameters['environment'] = \ApnsPHP_Abstract::ENVIRONMENT_PRODUCTION;
 
                 if (isset($parameters['prod_cert']) && file_exists($parameters['prod_cert'])) {
                     $this->certificate = $parameters['prod_cert'];
-                }
-                else {
+                } else {
                     throw new PushException("No APNS production certificate specified");
                 }
-            }
-            else {
+            } else {
                 throw new PushException("APNS environment must be 'production' or 'sandbox'");
             }
         }
@@ -67,7 +60,7 @@ class IosPush extends AbstractPush
     public function sendPush()
     {
         $failedMessages = [];
-        
+
         if (!isset($this->registrationTokens) || !count($this->registrationTokens)) {
             $failedMessages = $this->registrationTokens;
 
@@ -85,46 +78,42 @@ class IosPush extends AbstractPush
         // Connect to the Apple Push Notification Service
         $push->connect();
 
-        $category = $this->pushData->getApnsCategory();
-        $expiry = $this->pushData->getApnsExpiry();
-        $text = $this->pushData->getApnsText();
-        $sound = $this->pushData->getApnsSound();
-        $customProperties = json_decode($this->pushData->getApnsCustomProperties(), true);
-
-        for ($i = 0; $i < count($this->registrationTokens); $i++) {
-            $token = $this->registrationTokens[$i];
-            $badge = $this->pushData->getApnsBadge() ? $this->pushData->getApnsBadge() : $this->badges[$i];
-
+        foreach ($this->registrationTokens as $index => $token) {
             try {
                 $message = new \ApnsPHP_Message($token);
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $this->logger->log("ERROR: Device token " . $token . " has problem : " . $e->getMessage());
                 $failedMessages[] = $token;
-                
+
                 continue;
             }
 
-            if(isset($badge)) {
+            $badge = (array_key_exists($index, $this->badges) && is_numeric($this->badges[$index])) ? $this->badges : 1;
+            $category = $this->pushData->getApnsCategory();
+            $expiry = $this->pushData->getApnsExpiry();
+            $text = $this->pushData->getApnsText();
+            $sound = $this->pushData->getApnsSound();
+            $customProperties = $this->pushData->getApnsCustomProperties();
+
+            if (isset($badge)) {
                 $message->setBadge($badge);
             }
 
-            if(isset($category)) {
+            if (isset($category)) {
                 $message->setCategory($category);
             }
 
-            if(isset($expiry)) {
+            if (isset($expiry)) {
                 $message->setExpiry($expiry);
             }
 
-            if(isset($text)) {
+            if (isset($text)) {
                 $message->setText($text);
             }
 
-            if(isset($sound)) {
+            if (isset($sound)) {
                 $message->setSound($sound);
-            }
-            else {
+            } else {
                 $message->setSound();
             }
 
@@ -148,7 +137,7 @@ class IosPush extends AbstractPush
             // Examine the error message container
             $aErrorQueue = $push->getErrors();
             if (!empty($aErrorQueue)) {
-                foreach($aErrorQueue as $error) {
+                foreach ($aErrorQueue as $error) {
                     // On récupère la liste des token qui ont généré une erreur
                     $var = $error['MESSAGE'];
                     $failedMessages = array_merge($failedMessages, $var->getRecipients());
@@ -156,8 +145,7 @@ class IosPush extends AbstractPush
             }
 
             return $this->returnResult($failedMessages, $this->registrationTokens);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->returnResult($this->registrationTokens, $this->registrationTokens);
         }
     }

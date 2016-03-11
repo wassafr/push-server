@@ -10,9 +10,9 @@ use Psr\Log\LoggerInterface;
  */
 class MultiPushServer
 {
-    const SEND_APNS  = 1;
-    const SEND_GCM   = 2;
-    const SEND_BOTH  = 3;
+    const SEND_APNS = 1;
+    const SEND_GCM = 2;
+    const SEND_BOTH = 3;
 
     /**
      * @var array
@@ -78,10 +78,9 @@ class MultiPushServer
     /**
      * @param PushData $pushData
      * @param array $registrationTokens
-     * @param array $badges
-     * @return array
+     * @return array|bool
      */
-    public function send(PushData $pushData, $registrationTokens, $badges = null)
+    public function send(PushData $pushData, $registrationTokens, $badges = array())
     {
         if (($this->_mode & self::SEND_APNS) == self::SEND_APNS) {
             $pushInfo['apns']['environment'] = $this->_config['apns']['environment'];
