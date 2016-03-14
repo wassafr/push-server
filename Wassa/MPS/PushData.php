@@ -155,7 +155,8 @@ class PushData
      */
     public function setApnsCustomProperties($apnsCustomProperties)
     {
-        $this->apnsCustomProperties = $apnsCustomProperties;
+        /** @TODO-Bruno: Try sending the JSON without de-encoding (array required by APNS PHP Library) */
+        $this->apnsCustomProperties = (array)json_decode($apnsCustomProperties);
         return $this;
     }
 
