@@ -50,6 +50,11 @@ class PushData
      * @var string
      */
     protected $apnsSound;
+    /**
+     * @var int
+     */
+    protected $apnsContentAvailable = false;
+
 
     /**
      * @return string
@@ -193,6 +198,24 @@ class PushData
     public function setApnsSound($apnsSound)
     {
         $this->apnsSound = $apnsSound;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContentAvailable()
+    {
+        return $this->apnsContentAvailable;
+    }
+
+    /**
+     * @param $contentAvailable
+     * @return $this
+     */
+    public function setContentAvailable($contentAvailable)
+    {
+        $this->apnsContentAvailable = $contentAvailable;
         return $this;
     }
 }

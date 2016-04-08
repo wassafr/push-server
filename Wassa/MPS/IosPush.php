@@ -94,6 +94,7 @@ class IosPush extends AbstractPush
             $text = $this->pushData->getApnsText();
             $sound = $this->pushData->getApnsSound();
             $customProperties = $this->pushData->getApnsCustomProperties();
+            $contentAvailable = $this->pushData->getContentAvailable();
 
             if (isset($badge)) {
                 $message->setBadge($badge);
@@ -115,6 +116,10 @@ class IosPush extends AbstractPush
                 $message->setSound($sound);
             } else {
                 $message->setSound();
+            }
+
+            if ($contentAvailable) {
+                $message->setContentAvailable(true);
             }
 
             if (isset($customProperties) && is_array($customProperties)) {
