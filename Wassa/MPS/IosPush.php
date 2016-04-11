@@ -96,30 +96,45 @@ class IosPush extends AbstractPush
             $customProperties = $this->pushData->getApnsCustomProperties();
             $contentAvailable = $this->pushData->getContentAvailable();
 
-            if (isset($badge)) {
-                $message->setBadge($badge);
-            }
+            if (!$this->pushData->isSilent()) {
 
-            if (isset($category)) {
-                $message->setCategory($category);
-            }
+                // DEFAULT PUSH
+                if (isset($badge)) {
+                    $message->setBadge($badge);
+                }
 
-            if (isset($expiry)) {
-                $message->setExpiry($expiry);
-            }
+                if (isset($category)) {
+                    $message->setCategory($category);
+                }
 
-            if (isset($text)) {
-                $message->setText($text);
-            }
+                if (isset($expiry)) {
+                    $message->setExpiry($expiry);
+                }
 
-            if (isset($sound)) {
-                $message->setSound($sound);
+                if (isset($text)) {
+                    $message->setText($text);
+                }
+
+                if (isset($sound)) {
+                    $message->setSound($sound);
+                } else {
+                    $message->setSound();
+                }
+
+                if ($contentAvailable) {
+                    $message->setContentAvailable(true);
+                }
             } else {
-                $message->setSound();
-            }
 
-            if ($contentAvailable) {
+                // SILENT PUSH
                 $message->setContentAvailable(true);
+                // Set push information to custom payload
+                if (isset($text)) {
+                    $customProperties['alert'] = $text;
+                }
+                if (isset($category)) {
+                    $customProperties['category'] = $category;
+                }
             }
 
             if (isset($customProperties) && is_array($customProperties)) {
