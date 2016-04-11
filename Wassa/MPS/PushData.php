@@ -55,6 +55,10 @@ class PushData
      */
     protected $apnsContentAvailable = false;
 
+    /**
+     * @var bool
+     */
+    protected $silent = false;
 
     /**
      * @return string
@@ -216,6 +220,24 @@ class PushData
     public function setContentAvailable($contentAvailable)
     {
         $this->apnsContentAvailable = $contentAvailable;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSilent()
+    {
+        return $this->silent;
+    }
+
+    /**
+     * @param $bool
+     */
+    public function setSilent($bool)
+    {
+        $this->silent = ($bool) ? true : false;
+
         return $this;
     }
 }
