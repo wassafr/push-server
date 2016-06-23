@@ -60,7 +60,7 @@ class AndroidPush extends AbstractPush
                         }
                     }
 
-                    $chunkResults = $this->returnResult($okMessages, $this->registrationTokens, false);
+                    $chunkResults[] = $this->returnResult($okMessages, $this->registrationTokens, false);
                 }
             }
 
